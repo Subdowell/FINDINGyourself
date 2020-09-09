@@ -6,6 +6,7 @@ __pycache__
 db.sqlite3
 media
 
+
 # Backup files #
 *.bak
 
@@ -22,6 +23,7 @@ media
 .idea/**/uiDesigner.xml
 .idea/**/gradle.xml
 .idea/**/libraries
+.idea/
 *.iws /out/
 
 # Python #

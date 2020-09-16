@@ -18,143 +18,148 @@ headers = [
           ]
 
 
-def hh_ru(url):
+def hh_ru(url, city=None, language=None):
     jobs = []
     errors = []
     resp = requests.get(url, headers=headers[randint(0,2)])
-
-    if resp.status_code == 200:
-        soup = BS(resp.content, 'html.parser')
-        main_div = soup.find('div', attrs= {'class': 'vacancy-serp'})
-        if main_div:
-            div_lst = main_div.find_all('div',attrs= {'class': 'vacancy-serp-item'})
-            for div in div_lst:
-                title = div.find('span', attrs = {'class': 'g-user-content'})
-                href = title.a['href']
-                content = div.find('div', attrs = {'class': 'g-user-content'}).text
-                company = 'No name'
-                com = div.find('div', attrs={'class': 'vacancy-serp-item__meta-info'}).a.text
-                if com:
-                    company = com
-                jobs.append({'title': title.text, 'url': href,
-                             'description': content, 'company': company})
+    if url:
+        if resp.status_code == 200:
+            soup = BS(resp.content, 'html.parser')
+            main_div = soup.find('div', attrs= {'class': 'vacancy-serp'})
+            if main_div:
+                div_lst = main_div.find_all('div',attrs= {'class': 'vacancy-serp-item'})
+                for div in div_lst:
+                    title = div.find('span', attrs = {'class': 'g-user-content'})
+                    href = title.a['href']
+                    content = div.find('div', attrs = {'class': 'g-user-content'}).text
+                    company = 'No name'
+                    com = div.find('div', attrs={'class': 'vacancy-serp-item__meta-info'}).a.text
+                    if com:
+                        company = com
+                    jobs.append({'title': title.text, 'url': href,
+                                 'description': content, 'company': company,
+                                 'city_id': city, 'language_id': language})
+            else:
+                errors.append({'url': url, 'title': 'Div does not exists'})
         else:
-            errors.append({'url': url, 'title': 'Div does not exists'})
-    else:
-        errors.append({'url': url, 'title': 'Page do not response'})
+            errors.append({'url': url, 'title': 'Page do not response'})
     return jobs, errors
 
-def praca_by(url):
+def praca_by(url, city=None, language=None):
     jobs = []
     errors = []
     resp = requests.get(url, headers=headers[randint(0,2)])
+    if url:
+        if resp.status_code == 200:
+            soup = BS(resp.content, 'html.parser')
+            main_ul = soup.find('ul', attrs={'class': 'search-list'})
+            if main_ul:
+                ul_lst = main_ul.find_all('li', attrs={'class': 'vac-small'})
+                for ul in ul_lst:
+                    title = ul.find('div', attrs={'class': 'vac-small__title'})
+                    href = title.a['href']
+                    company = ul.find('div', attrs={'class': 'vac-small__upd'}).a.text
+                    jobs.append({'title': title.text, 'url': href, 'company': company,
+                                 'city_id': city, 'language_id': language})
 
-    if resp.status_code == 200:
-        soup = BS(resp.content, 'html.parser')
-        main_ul = soup.find('ul', attrs={'class': 'search-list'})
-        if main_ul:
-            ul_lst = main_ul.find_all('li', attrs={'class': 'vac-small'})
-            for ul in ul_lst:
-                title = ul.find('div', attrs={'class': 'vac-small__title'})
-                href = title.a['href']
-                company = ul.find('div', attrs={'class': 'vac-small__upd'}).a.text
-                jobs.append({'title': title.text, 'url': href, 'company': company})
-
+            else:
+                errors.append({'url': url, 'title': 'Ul does not exists'})
         else:
-            errors.append({'url': url, 'title': 'Ul does not exists'})
-    else:
-        errors.append({'url': url, 'title': 'Page do not response'})
+            errors.append({'url': url, 'title': 'Page do not response'})
     return jobs, errors
 
-def rabota_ua(url):
+def rabota_ua(url, city=None, language=None):
     jobs = []
     errors = []
     domain = 'https://rabota.ua'
     resp = requests.get(url, headers=headers[randint(0,2)])
-
-    if resp.status_code == 200:
-        soup = BS(resp.content, 'html.parser')
-        new_jobs = soup.find('div', attrs={'class':'f-vacancylist-newnotfound'})
-        if not new_jobs:
-            main_tb = soup.find('table', id='ctl00_content_vacancyList_gridList')
-            if main_tb:
-                tr_lst = main_tb.find_all('tr', id=True)
-                for tar in tr_lst:
-                    div = tar.find('div', attrs = {'class': 'card-body'})
-                    if div:
-                        title = div.find('p', attrs={'class': 'card-title'})
-                        href = title.a['href']
-                        content = div.find('div', attrs={'class': 'card-description'}).text
-                        company = 'No name'
-                        p = div.find('p', attrs= {'class': 'company-name'})
-                        if p:
-                            company = p.a.text
-                        jobs.append({'title': title.text, 'url': domain + href,
-                                     'descriptions': content, 'company': company})
+    if url:
+        if resp.status_code == 200:
+            soup = BS(resp.content, 'html.parser')
+            new_jobs = soup.find('div', attrs={'class':'f-vacancylist-newnotfound'})
+            if not new_jobs:
+                main_tb = soup.find('table', id='ctl00_content_vacancyList_gridList')
+                if main_tb:
+                    tr_lst = main_tb.find_all('tr', id=True)
+                    for tar in tr_lst:
+                        div = tar.find('div', attrs = {'class': 'card-body'})
+                        if div:
+                            title = div.find('p', attrs={'class': 'card-title'})
+                            href = title.a['href']
+                            content = div.find('div', attrs={'class': 'card-description'}).text
+                            company = 'No name'
+                            p = div.find('p', attrs= {'class': 'company-name'})
+                            if p:
+                                company = p.a.text
+                            jobs.append({'title': title.text, 'url': domain + href,
+                                         'descriptions': content, 'company': company,
+                                         'city_id': city, 'language_id': language})
+                else:
+                    errors.append({'url': url, 'title': 'Table does not exists'})
             else:
-                errors.append({'url': url, 'title': 'Table does not exists'})
+                errors.append({'url': url, 'title': 'Page is empty'})
         else:
-            errors.append({'url': url, 'title': 'Page is empty'})
-    else:
-        errors.append({'url': url, 'title': 'Page do not response'})
+            errors.append({'url': url, 'title': 'Page do not response'})
     return jobs, errors
 
-def djinni_co(url):
+def djinni_co(url, city=None, language=None):
     jobs = []
     errors = []
     domain = 'https://djinni.co'
     resp = requests.get(url, headers=headers[randint(0,2)])
-
-    if resp.status_code == 200:
-        soup = BS(resp.content, 'html.parser')
-        new_jobs = soup.find('div', attrs={'class':'f-vacancylist-newnotfound'})
-        if not new_jobs:
-            main_ul = soup.find('ul', attrs={'class': 'list-jobs'})
-            if main_ul:
-                ul_lst = main_ul.find_all('li', attrs={'class': 'list-jobs__item'})
-                for ul in ul_lst:
-                    title = ul.find('div', attrs={'class': 'list-jobs__title'})
-                    href = title.a['href']
-                    content = ul.find('p').text
-                    company = 'No name'
-                    a = ul.find('div', attrs={'class': 'list-jobs__details__info'}).text
-                    if a:
-                        company = a
-                    jobs.append({'title': title.text, 'url': domain + href,
-                                'description': content, 'company': company})
+    if url:
+        if resp.status_code == 200:
+            soup = BS(resp.content, 'html.parser')
+            new_jobs = soup.find('div', attrs={'class':'f-vacancylist-newnotfound'})
+            if not new_jobs:
+                main_ul = soup.find('ul', attrs={'class': 'list-jobs'})
+                if main_ul:
+                    ul_lst = main_ul.find_all('li', attrs={'class': 'list-jobs__item'})
+                    for ul in ul_lst:
+                        title = ul.find('div', attrs={'class': 'list-jobs__title'})
+                        href = title.a['href']
+                        content = ul.find('p').text
+                        company = 'No name'
+                        a = ul.find('div', attrs={'class': 'list-jobs__details__info'}).text
+                        if a:
+                            company = a
+                        jobs.append({'title': title.text, 'url': domain + href,
+                                    'description': content, 'company': company,
+                                     'city_id': city, 'language_id': language})
+                else:
+                    errors.append({'url': url, 'title': 'Section does not exists'})
             else:
-                errors.append({'url': url, 'title': 'Section does not exists'})
+                errors.append({'url': url, 'title': 'Page is empty'})
         else:
-            errors.append({'url': url, 'title': 'Page is empty'})
-    else:
-        errors.append({'url': url, 'title': 'Page do not response'})
+            errors.append({'url': url, 'title': 'Page do not response'})
     return jobs, errors
 
-def belmeta(url):
+def belmeta(url, city=None, language=None):
     jobs = []
     errors = []
     domain = 'https://belmeta.com'
     resp = requests.get(url, headers=headers[randint(0,2)])
-
-    if resp.status_code == 200:
-        soup = BS(resp.content, 'html.parser')
-        main_div = soup.find('div', attrs= {'class': 'jobs'})
-        if main_div:
-            article_lst = main_div.find_all('article',attrs= {'class': 'job'})
-            for article in article_lst:
-                title = article.find('h2', attrs = {'class': 'title'})
-                href = title.a['href']
-                content = article.find('div', attrs = {'class': 'desc'}).text
-                company = 'No name'
-                com = article.find('div', attrs = {'class': 'job-data company'}).text
-                if com:
-                    company = com
-                jobs.append({'title': title.text, 'url': domain + href,
-                             'description': content, 'company': company})
+    if url:
+        if resp.status_code == 200:
+            soup = BS(resp.content, 'html.parser')
+            main_div = soup.find('div', attrs= {'class': 'jobs'})
+            if main_div:
+                article_lst = main_div.find_all('article',attrs= {'class': 'job'})
+                for article in article_lst:
+                    title = article.find('h2', attrs = {'class': 'title'})
+                    href = title.a['href']
+                    content = article.find('div', attrs = {'class': 'desc'}).text
+                    company = 'No name'
+                    com = article.find('div', attrs = {'class': 'job-data company'}).text
+                    if com:
+                        company = com
+                    jobs.append({'title': title.text, 'url': domain + href,
+                                 'description': content, 'company': company,
+                                 'city_id': city, 'language_id': language})
+            else:
+                errors.append({'url': url, 'title': 'Div does not exists'})
         else:
-            errors.append({'url': url, 'title': 'Div does not exists'})
-    else:
-        errors.append({'url': url, 'title': 'Page do not response'})
+            errors.append({'url': url, 'title': 'Page do not response'})
     return jobs, errors
 
 

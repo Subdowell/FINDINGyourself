@@ -1,5 +1,7 @@
 import codecs
 import os, sys
+
+from django.contrib.auth import get_user_model
 from django.db import DatabaseError
 
 proj = os.path.dirname(os.path.abspath('manage.py'))
@@ -10,27 +12,55 @@ import django
 django.setup()
 
 
-from scraping.models import Vacancy, City, Language, Error
+from scraping.models import Vacancy, City, Language, Error, Url
 from scraping.parser import *
 
+User = get_user_model()
+
 parser = (
-    (hh_ru, 'https://hh.ru/search/vacancy?st=searchVacancy&text=Python&area=1002&salary=&currency_code=RUR&experience=doesNotMatter&order_by=relevance&search_period=&items_on_page=50&no_magic=true&L_save_area=true&from=suggest_post'),
-    (praca_by, 'https://praca.by/search/vacancies/?search%5Bcities%5D%5B%D0%9C%D0%B8%D0%BD%D1%81%D0%BA%5D=1&search%5Bquery%5D=python&search%5Bdistance%5D%5B50000%5D=1&search%5Bhome-address%5D=%D0%9C%D0%B8%D0%BD%D1%81%D0%BA&search%5Bquery-text-params%5D%5Bheadline%5D=1&form-submit-btn=%D0%9D%D0%B0%D0%B9%D1%82%D0%B8'),
-    (belmeta, 'https://belmeta.com/vacansii?q=Python&l=%D0%9C%D0%B8%D0%BD%D1%81%D0%BA')
+    (hh_ru, 'hh_ru'),
+    (praca_by, 'praca_by'),
+    (belmeta, 'belmeta')
     # (djinni_co, 'https://djinni.co/jobs/keyword-python/')
 )
-city = City.objects.filter(slug='minsk').first()
-language = Language.objects.filter(slug='python').first()
+
+def get_settings():
+    qs = User.objects.filter(send_email=True).values()
+    settings_lst = set((q['city_id'], q['language_id']) for q in qs)
+    return settings_lst
+
+def get_urls(_settings):
+    qs = Url.objects.all().values()
+    url_dct = {(q['city_id'], q['language_id']): q['url_data'] for q in qs}
+    urls = []
+    for pair in _settings:
+        tmp = {}
+        tmp['city'] = pair[0]
+        tmp['language'] = pair[1]
+        tmp['url_data'] = url_dct[pair]
+        urls.append(tmp)
+
+    return urls
+
+settings = get_settings()
+url_list = get_urls(settings)
+
+
+# city = City.objects.filter(slug='minsk').first()
+# language = Language.objects.filter(slug='python').first()
 
 jobs, errors = [], []
+for data in url_list:
 
-for func, url in parser:
-    j, e = func(url)
-    jobs += j
-    errors += e
+    for func, key in parser:
+        url = data['url_data'][key]
+
+        j, e = func(url, city=data['city'], language=data['language'])
+        jobs += j
+        errors += e
 
 for job in jobs:
-    v = Vacancy(**job, city=city, language=language)
+    v = Vacancy(**job)
     try:
         v.save()
     except DatabaseError:

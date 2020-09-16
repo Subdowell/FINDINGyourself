@@ -3,7 +3,7 @@ import codecs
 from bs4 import BeautifulSoup as BS
 from random import randint
 
-__all__ = ('hh_ru', 'praca_by', 'djinni_co')
+__all__ = ('hh_ru', 'praca_by', 'djinni_co', 'belmeta')
 
 headers = [
            {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36',
@@ -33,9 +33,9 @@ def hh_ru(url):
                 href = title.a['href']
                 content = div.find('div', attrs = {'class': 'g-user-content'}).text
                 company = 'No name'
-                logo = div.find('img')
-                if logo:
-                    company = logo['alt']
+                com = div.find('div', attrs={'class': 'vacancy-serp-item__meta-info'}).a.text
+                if com:
+                    company = com
                 jobs.append({'title': title.text, 'url': href,
                              'description': content, 'company': company})
         else:
@@ -130,10 +130,37 @@ def djinni_co(url):
         errors.append({'url': url, 'title': 'Page do not response'})
     return jobs, errors
 
+def belmeta(url):
+    jobs = []
+    errors = []
+    domain = 'https://belmeta.com'
+    resp = requests.get(url, headers=headers[randint(0,2)])
+
+    if resp.status_code == 200:
+        soup = BS(resp.content, 'html.parser')
+        main_div = soup.find('div', attrs= {'class': 'jobs'})
+        if main_div:
+            article_lst = main_div.find_all('article',attrs= {'class': 'job'})
+            for article in article_lst:
+                title = article.find('h2', attrs = {'class': 'title'})
+                href = title.a['href']
+                content = article.find('div', attrs = {'class': 'desc'}).text
+                company = 'No name'
+                com = article.find('div', attrs = {'class': 'job-data company'}).text
+                if com:
+                    company = com
+                jobs.append({'title': title.text, 'url': domain + href,
+                             'description': content, 'company': company})
+        else:
+            errors.append({'url': url, 'title': 'Div does not exists'})
+    else:
+        errors.append({'url': url, 'title': 'Page do not response'})
+    return jobs, errors
+
 
 if __name__ == '__main__':
-    url = 'https://djinni.co/jobs/keyword-python/'
-    jobs, errors = djinni_co(url)
-    h = codecs.open('../work.json', 'w', 'utf-8')
+    url = 'https://belmeta.com/vacansii?q=Python&l=%D0%9C%D0%B8%D0%BD%D1%81%D0%BA'
+    jobs, errors = belmeta(url)
+    h = codecs.open('work.json', 'w', 'utf-8')
     h.write(str(jobs))
     h.close()

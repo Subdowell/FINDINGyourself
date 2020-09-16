@@ -14,8 +14,9 @@ from scraping.models import Vacancy, City, Language, Error
 from scraping.parser import *
 
 parser = (
-    (hh_ru, 'https://hh.ru/search/vacancy?area=&fromSearchLine=true&st=searchVacancy&text=Python&from=suggest_post'),
+    (hh_ru, 'https://hh.ru/search/vacancy?st=searchVacancy&text=Python&area=1002&salary=&currency_code=RUR&experience=doesNotMatter&order_by=relevance&search_period=&items_on_page=50&no_magic=true&L_save_area=true&from=suggest_post'),
     (praca_by, 'https://praca.by/search/vacancies/?search%5Bcities%5D%5B%D0%9C%D0%B8%D0%BD%D1%81%D0%BA%5D=1&search%5Bquery%5D=python&search%5Bdistance%5D%5B50000%5D=1&search%5Bhome-address%5D=%D0%9C%D0%B8%D0%BD%D1%81%D0%BA&search%5Bquery-text-params%5D%5Bheadline%5D=1&form-submit-btn=%D0%9D%D0%B0%D0%B9%D1%82%D0%B8'),
+    (belmeta, 'https://belmeta.com/vacansii?q=Python&l=%D0%9C%D0%B8%D0%BD%D1%81%D0%BA')
     # (djinni_co, 'https://djinni.co/jobs/keyword-python/')
 )
 city = City.objects.filter(slug='minsk').first()

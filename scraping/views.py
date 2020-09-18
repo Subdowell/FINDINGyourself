@@ -4,7 +4,7 @@ from .models import Vacancy
 from .forms import FindForm
 
 
-def list_view(request):
+def list_views(request):
     city = request.GET.get("city")
     language = request.GET.get("language")
     form = FindForm()
@@ -22,6 +22,6 @@ def list_view(request):
         context['object_list'] = page_obj
     return render(request, 'scraping/list.html', context)
 
-def home_view(request):
+def home_views(request):
     form = FindForm()
     return render(request, 'scraping/home.html', {'form': form})

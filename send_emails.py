@@ -55,7 +55,7 @@ if qs.exists():
     data = error.data
     _html = ''
     for i in data:
-        content += f'<p><a href="{ i["url"] }">Error:{ i["title"] }</a></p>'
+        _html += f'<p><a href="{ i["url"] }">Error:{ i["title"] }</a></p>'
     subject = ""
     text_content = ""
     to = ADMIN_USER

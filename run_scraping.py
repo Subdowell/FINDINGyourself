@@ -57,8 +57,10 @@ loop = asyncio.get_event_loop()
 tmp_tasks = [(func, data['url_data'][key], data['city'], data['language'])
              for data in url_list
              for func, key in parser]
-tasks = asyncio.wait([loop.create_task(main(f)) for f in tmp_tasks])
-
+if tmp_tasks:
+    tasks = asyncio.wait([loop.create_task(main(f)) for f in tmp_tasks])
+    loop.run_until_complete(tasks)
+    loop.close()
 # for data in url_list:
 #
 #     for func, key in parser:
@@ -67,8 +69,7 @@ tasks = asyncio.wait([loop.create_task(main(f)) for f in tmp_tasks])
 #         jobs += j
 #         errors += e
 
-loop.run_until_complete(tasks)
-loop.close()
+
 
 for job in jobs:
     v = Vacancy(**job)

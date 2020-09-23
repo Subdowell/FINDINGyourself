@@ -25,10 +25,12 @@ parser = (
     )
 jobs, errors = [], []
 
+
 def get_settings():
     qs = User.objects.filter(send_email=True).values()
     settings_lst = set((q['city_id'], q['language_id']) for q in qs)
     return settings_lst
+
 
 def get_urls(_settings):
     qs = Url.objects.all().values()
@@ -39,8 +41,10 @@ def get_urls(_settings):
             tmp = {}
             tmp['city'] = pair[0]
             tmp['language'] = pair[1]
-            tmp['url_data'] = url_dct[pair]
-            urls.append(tmp)
+            url_data = url_dct.get(pair)
+            if url_data:
+                tmp['url_data'] = url_dct.get(pair)
+                urls.append(tmp)
     return urls
 
 
@@ -57,19 +61,18 @@ loop = asyncio.get_event_loop()
 tmp_tasks = [(func, data['url_data'][key], data['city'], data['language'])
              for data in url_list
              for func, key in parser]
-if tmp_tasks:
-    tasks = asyncio.wait([loop.create_task(main(f)) for f in tmp_tasks])
-    loop.run_until_complete(tasks)
-    loop.close()
+
 # for data in url_list:
 #
-#     for func, key in parser:
+#     for func, key in parsers:
 #         url = data['url_data'][key]
 #         j, e = func(url, city=data['city'], language=data['language'])
 #         jobs += j
 #         errors += e
-
-
+if tmp_tasks:
+    tasks = asyncio.wait([loop.create_task(main(f)) for f in tmp_tasks])
+    loop.run_until_complete(tasks)
+    loop.close()
 
 for job in jobs:
     v = Vacancy(**job)
@@ -77,7 +80,6 @@ for job in jobs:
         v.save()
     except DatabaseError:
         pass
-
 if errors:
     qs = Error.objects.filter(timestamp=dt.date.today())
     if qs.exists():
@@ -85,7 +87,7 @@ if errors:
         err.data.update({'errors': errors})
         err.save()
     else:
-        er = Error(data=f'errors:{errors}').save()
+        er = Error(data={'errors':errors} ).save()
 
 # h = codecs.open('work.json', 'w', 'utf-8')
 # h.write(str(jobs))

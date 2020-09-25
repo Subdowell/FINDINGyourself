@@ -3,20 +3,18 @@
 {% block title %} List {% endblock %}
 
 {% block content %}
-    {% for obj in object_list %}
-        <div class="card my-2">
-            <h5 class="card-header"><a href="{{ obj.url }}">{{ obj.title }}</a></h5>
-            <div class="card-body">
-                <h5>{{ obj.company }}</h5>
-                <p class="card-text">{{ obj.description }}</p>
-                <p>{{ obj.city.name }} | {{ obj.language.name }} | <small>{{ obj.timestamp|date:"d-m-Y"  }}</small></p>
-            </div>
-        </div>
-    {% empty %}
-        <h3>К сожалению, по Вашему запросу ничего не найдено. :(</h3>
-    {% endfor %}
-
 {% if object_list %}
+<h3>Результаты согласно Вашего запроса.</h3>
+    {% for obj in object_list %}
+            <div class="card my-2">
+                <h5 class="card-header"><a href="{{ obj.url }}">{{ obj.title }}</a></h5>
+                <div class="card-body">
+                    <p class="card-text">{{ obj.description }}</p>
+                    <h5>{{ obj.company }}</h5>
+                    <p>{{ obj.city.name }} | {{ obj.language.name }} | <small>{{ obj.timestamp|date:"d-m-Y"  }}</small></p>
+                </div>
+            </div>
+    {% endfor %}
     <div class="row">
         <div class="col">
             <nav aria-label="Page navigation example">
@@ -62,6 +60,8 @@
 <!--            </div>-->
         </div>
     </div>
+{% else %}
+    <h3>К сожалению, по Вашему запросу ничего не найдено. :(</h3>
 {% endif %}
 
 <div class="row">

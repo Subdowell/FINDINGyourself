@@ -1,0 +1,9 @@
+@font-face {
+    font-family: Lemon;
+    src: url(../fonts/Lemon-Regular.ttf);
+}
+#brand {
+    font-family: Lemon;
+    color: #C0C0C0;
+
+}

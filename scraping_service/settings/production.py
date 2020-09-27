@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 import dj_database_url
-from pathlib import Path
+
 
 
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
@@ -33,12 +33,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ynf*ei83qd+qi#o5dndrz!8aq1fvo=a9i2zf5t@i4g(6!%m5gn'
-
+# SECRET_KEY = 'ynf*ei83qd+qi#o5dndrz!8aq1fvo=a9i2zf5t@i4g(6!%m5gn'
+SECRET_KEY = SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["https://fin-you.herokuapp.com/"]
 
 
 # Application definition

@@ -10,11 +10,38 @@
 
 
 
-.footer-copyright {
-    margin-top: 270px;
-	left: 0;
-	bottom: 0;
-	width: 100%;
-	height: 80px;
-	background-color: #e3f2fd
+@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
+.social a {
+    font-size: 1em;
+    padding: 1em;
 }
+.fa-github  {color: #191919;}
+.fa-youtube {color: #c4302b;}
+.fa-instagram {color: #3f729b;}
+.fa-vk {color: #5d84ae;}
+.fa-linkedin {color: #0e76a8;}
+.fa-telegram {color: #249bd7;}
+
+.fa-github:hover, .fa-youtube:hover, .fa-instagram:hover,
+.fa-vk:hover, .fa-linkedin:hover, .fa-telegram:hover {color: #ccc;}
+
+footer {
+    background-color: #e3f2fd;
+    padding-top: 50px;
+    border-top: 4px;
+    margin-top: auto;
+}
+
+
+.contacts {
+    font-family: Lemon;
+    color: #C0C0C0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+}
+

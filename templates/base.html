@@ -8,7 +8,8 @@
       <link rel="icon" href="{% static 'favicon.ico' %}">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-      <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <title>{% block title %}FINDING yourself{% endblock %}</title>
   </head>
   <body>
@@ -72,12 +73,29 @@
     {% endblock %}
   </div>
   {% block footer %}
-    <div class="footer my-3">
-        <footer class="page-footer">
-          <div class="footer-copyright text-center py-3">© 2020 Copyright:
-            <a href="https://fin-you.herokuapp.com/">Finding-yorself</a>
-          </div>
-        </footer>
+    <footer class="container-fluid">
+        <div class="container">
+            <div class="row padding text-center">
+                <div class="col-12 contacts">
+                    <h2>Contacts:</h2>
+                </div>
+                <div class="col-12 social padding">
+                    <a href="https://github.com/Subdowell"><i class="fa fa-github fa-2x"></i></a>
+                    <a href="https://www.youtube.com/channel/UC6Oxi97SMn5luk64dzb-RlA?view_as=subscriber"><i class="fa fa-youtube fa-2x"></i></a>
+                    <a href="https://www.instagram.com/bumajnii_kolpak/"><i class="fa fa-instagram fa-2x"></i></a>
+                    <a href="https://vk.com/oldschol"><i class="fa fa-vk fa-2x"></i></a>
+                    <a href="https://www.linkedin.com/in/vitali-bondar-710138153/"><i class="fa fa-linkedin fa-2x"></i></a>
+                    <a href="https://t.me/subsonic"><i class="fa fa-telegram fa-2x"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+<!--    <div class="footer my-3">-->
+<!--        <footer class="page-footer">-->
+<!--          <div class="footer-copyright text-center py-3">© 2020 Copyright:-->
+<!--            <a href="https://fin-you.herokuapp.com/">Finding-yorself</a>-->
+<!--          </div>-->
+<!--        </footer>-->
   {% endblock %}
 
 

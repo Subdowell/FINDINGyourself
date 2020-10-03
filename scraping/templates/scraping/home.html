@@ -9,15 +9,15 @@
 </div>
 <div class="row">
     <div class="col-md-8 mx-auto">
-            <h4 class="text-center my-2">Мы занимаемся анализом сайтов с вакансиями, согласно настроек наших подписчиков.
-                Вы можете просмартивать актуальные вакансии, просто выбрав необходимый город или специальность.
+            <h4 class="text-center my-2">Мы занимаемся анализом сайтов с вакансиями, согласно настройкам наших подписчиков.
+                Вы можете просматривать актуальные вакансии, просто выбрав необходимый город или специальность.
                 Или же, пройдя несложную <a href="{% url 'accounts:register' %}"> регистрацию</a>,
                 получать каждый день письмо со списком новых вакансий за последние сутки, согласно Ваших потребностей.</h4>
         <form method="GET" action="{% url 'list' %}">
             <div class="form-group">
                 {{ form.as_p }}
             </div>
-            <button type="submit" class="btn btn-primary">Найти</button>
+            <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;">Найти</button>
         </form>
     </div>
 </div>

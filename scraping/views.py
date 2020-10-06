@@ -22,6 +22,7 @@ def list_views(request):
         context['object_list'] = page_obj
     return render(request, 'scraping/list.html', context)
 
+
 def home_views(request):
     form = FindForm()
     return render(request, 'scraping/home.html', {'form': form})

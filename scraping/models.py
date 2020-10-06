@@ -84,7 +84,7 @@ class Url(models.Model):
         unique_together = ('city', 'language')
 
     def __str__(self):
-        return str(self.language)
+        return f'{self.language}, {self.city}'
         
     
 
